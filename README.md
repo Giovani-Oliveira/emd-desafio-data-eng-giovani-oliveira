@@ -1,7 +1,5 @@
 # Desafio de Data Engineer - EMD
 
-Repositório de instrução para o desafio técnico para vaga de Pessoa Engenheira de Dados no Escritório de Dados do Rio de Janeiro
-
 ## Descrição do desafio
 
 Neste desafio você deverá capturar, estruturar, armazenar e transformar dados de uma API instantânea. A API consiste nos dados de GPS do BRT que são gerados na hora da consulta com o último sinal transmitido por cada veículo.
@@ -10,21 +8,55 @@ Para o desafio, será necessário construir uma pipeline que captura os dados mi
 
 A pipeline deverá ser construída subindo uma instância local do Prefect (em Python). Utilize a versão *0.15.9* do Prefect.
 
-## O que iremos avaliar
+## Solução proposta
+ Cria-se um pipeline de dados que faz uma consulta a cada minuto, total de 10 consultas, a
+ API de GPS do BRT. Cada consulta gera um arquivo `.json` com a data que foi realizada a 
+ consulta e as informações coletadas. A cada 10 arquivos `.json` gerados
+ (representando 10 minutos de dados capturados) é gerado um arquivo `.csv` 
+ contendo as informações agregadas. Esse arquivo `.csv` então é
+ carregado numa tabela em um banco de dados PostgreSQL inicializado localmente
+ na tabela chamada `raw.tb_brt_gps`, e por fim, uma tabela derivada é gerada usando o DBT com o nome `raw.brt_info` 
 
-- Completude: A solução proposta atende a todos os requisitos do desafio?
-- Simplicidade: A solução proposta é simples e direta? É fácil de entender e trabalhar?
-- Organização: A solução proposta é organizada e bem documentada? É fácil de navegar e encontrar o que se procura?
-- Criatividade: A solução proposta é criativa? Apresenta uma abordagem inovadora para o problema proposto?
-- Boas práticas: A solução proposta segue boas práticas de Python, Git, Docker, etc.?
 
-## Atenção
+## Estrutura do projeto
 
-- A solução desse desafio deve ser publicada em um fork deste repositório no GitHub.
-- O link do repositório deve ser enviado até às 23:59, horário de Brasília, do dia 26 de julho de 2023 (quarta-feira) para o e-mail utilizado para contato com o assunto "Desafio Data Engineer - EMD".
-- Você deve ser capaz de apresentar sua solução, explicando como a idealizou, caso seja aprovado(a) para a próxima etapa.
+- `output/` - Diretório onde são gravados os arquivos .json e .csv;
+- `project_1/` - Contém todos os arquivos relacionados ao dbt;
+  - `dbt_project.yml` - Informa que materializa tabelas;
+  - `profiles.yml` - Informações para login do banco de dados;
+  - `models/` - Diretório com Querys usadas pelo dbt;
+    - `brt_info.sql` - Query para criação da tabela derivada;
+- `pipeline/` - Contém os arquivos relacionados a execução do pipeline pelo Prefect;
+  - `constants.py` - Declaração dos valores constantes para o projeto;
+  - `flows.py` - Declaração do Fluxo;
+  - `run.py` - Código para iniciar o Fluxo;
+  - `schedules.py` - Declaração do Schedule;
+  - `tasks.py` - Declaração das Tarefas;
+- `requirements.txt` - Bibliotecas (incluso versão) necessárias para rodar o código localmente;
 
-## Links de referência / utilidades
+
+## Configuração do ambiente de execução
+    
+### Requisitos
+
+- Código desenvolvido e testado em um ambiente virtual no Windows
+- Python 3.10.x
+- `pip`
+- `PostgreSQL`
+- `PostGIS`
+- `dbt-postgres`
+
+## Executando a pipeline
+
+- (Opcional) Crie e ative um ambiente virtual usando venv
+- Instale as dependências definidas em `requirements.txt` com o comando:
+```
+pip install -r requirements.txt
+ ```
+- Abra e execute o arquivo `run.py` na pasta `pipeline` do projeto:
+- Diretório padrão para rodar localmente é a pasta em que todas as pastas presentes estão alocadas
+
+## Links de referência
 
 - Documentação [Prefect](https://docs-v1.prefect.io/)
 - Documentação [DBT](https://docs.getdbt.com/docs/introduction)
@@ -35,9 +67,4 @@ A pipeline deverá ser construída subindo uma instância local do Prefect (em P
    BRT](https://dados.mobilidade.rio/gps/brt)
 - Repositório pipelines do [Escritorio de Dados](https://github.com/prefeitura-rio/pipelines)
 - Repositório de modelos DBT do [Escritorio de Dados](https://github.com/prefeitura-rio/queries-datario)
-
-
-## Dúvidas?
-
-Fale conosco pelo e-mail que foi utilizado para o envio desse desafio.
 
