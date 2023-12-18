@@ -53,7 +53,7 @@ A pipeline deverá ser construída subindo uma instância local do Prefect (em P
 ```
 pip install -r requirements.txt
  ```
-- Abra e execute o arquivo `run.py` na pasta `pipeline` do projeto:
+- Abra e execute o arquivo `run.py` na pasta `pipeline` do projeto
 - Diretório padrão para rodar localmente é a pasta em que todas as pastas presentes estão alocadas
 
 ## Links de referência
